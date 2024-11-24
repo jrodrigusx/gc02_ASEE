@@ -1,0 +1,291 @@
+openapi: 3.0.3
+info:
+  title: APIVisualizaciones - OpenAPI 3.0
+  version: 1.0.1
+servers:
+- url: /
+tags:
+- name: visualizacionesPeliculas
+  description: visualizaciones de una pelicula
+- name: visualizacionesSeries
+  description: visualizaciones de una serie
+- name: recomendacionesSeries
+  description: recomendaciones para un usuario de series
+- name: recomendacionesPeliculas
+  description: recomendaciones para un usuario de peliculas
+paths:
+  /visualizacionesPeliculas/{id}:
+    get:
+      tags:
+      - visualizacionesPeliculas
+      summary: las visualizaciones de una pelicula
+      operationId: visualizaciones_peliculas_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID de las visualizaciones de una película
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Visualizaciones de la pelicula
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/visualizacionesPeliculas'
+        "404":
+          description: Visualizaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.visualizaciones_peliculas_controller
+  /visualizacionesPeliculas/{id}/update:
+    put:
+      tags:
+      - visualizacionesPeliculas
+      summary: Actualizar las visualizaciones de una película
+      operationId: visualizaciones_peliculas_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID de las visualizaciones de una película
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Datos para actualizar las visualizaciones de la película
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/visualizacionesPeliculas'
+        required: true
+      responses:
+        "200":
+          description: Visualizaciones actualizadas exitosamente
+        "404":
+          description: Visualizaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.visualizaciones_peliculas_controller
+  /visualizacionesSeries/{id}:
+    get:
+      tags:
+      - visualizacionesSeries
+      summary: Obtener las visualizaciones de una Serie
+      operationId: visualizaciones_series_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID de las visualizaciones de una serie
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Visualizaciones de la serie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/visualizacionesSeries'
+        "404":
+          description: Visualizaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.visualizaciones_series_controller
+  /visualizacionesSeries/{id}/update:
+    put:
+      tags:
+      - visualizacionesSeries
+      summary: Actualizar las visualizaciones de una serie
+      operationId: visualizaciones_series_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID de las visualizaciones de una serie
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Datos para actualizar las visualizaciones de la serie
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/visualizacionesSeries'
+        required: true
+      responses:
+        "200":
+          description: Visualizaciones actualizadas exitosamente
+        "404":
+          description: Visualizaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.visualizaciones_series_controller
+  /recomendacionesSeries/{id}:
+    get:
+      tags:
+      - recomendacionesSeries
+      summary: Obtener las recomendaciones para un usario de series
+      operationId: recomendaciones_series_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID de las recomendaciones de series
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: recomendaciones de series
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recomendacionesSeries'
+        "404":
+          description: Recomendaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.recomendaciones_series_controller
+  /recomendacionesSeries/{id}/update:
+    put:
+      tags:
+      - recomendacionesSeries
+      summary: Actualizar las recomendaciones de series
+      operationId: recomendaciones_series_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID de las recomendaciones de series
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Datos para actualizar las recomendaciones de series
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recomendacionesSeries'
+        required: true
+      responses:
+        "200":
+          description: Recomendaciones actualizadas exitosamente
+        "404":
+          description: Recomendaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.recomendaciones_series_controller
+  /recomendacionesPeliculas/{id}:
+    get:
+      tags:
+      - recomendacionesPeliculas
+      summary: Obtener las recomendaciones para un usario de películas
+      operationId: recomendaciones_peliculas_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID de las recomendaciones de peliculas
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: recomendaciones de peliculas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recomendacionesPeliculas'
+        "404":
+          description: Recomendaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.recomendaciones_peliculas_controller
+  /recomendacionesPeliculas/{id}/update:
+    put:
+      tags:
+      - recomendacionesPeliculas
+      summary: Actualizar las recomendaciones de películas
+      operationId: recomendaciones_peliculas_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID de las recomendaciones de películas
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Datos para actualizar las recomendaciones de películas
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recomendacionesPeliculas'
+        required: true
+      responses:
+        "200":
+          description: Recomendaciones actualizadas exitosamente
+        "404":
+          description: Recomendaciones no encontradas
+      x-openapi-router-controller: swagger_server.controllers.recomendaciones_peliculas_controller
+components:
+  schemas:
+    visualizacionesPeliculas:
+      type: object
+      properties:
+        id:
+          type: string
+        peliculaId:
+          type: string
+        numVisualizaciones:
+          type: integer
+      example:
+        peliculaId: pelicula1
+        id: id1
+        numVisualizaciones: 0
+    visualizacionesSeries:
+      type: object
+      properties:
+        id:
+          type: string
+        serieId:
+          type: string
+        numVisualizaciones:
+          type: integer
+      example:
+        serieId: serie1
+        id: id2
+        numVisualizaciones: 0
+    recomendacionesSeries:
+      type: object
+      properties:
+        id:
+          type: string
+        usuarioId:
+          type: integer
+        recomendaciones:
+          type: array
+          items:
+            type: string
+      example:
+        recomendaciones:
+        - serie1
+        - serie2
+        usuarioId: 123
+        id: id3
+    recomendacionesPeliculas:
+      type: object
+      properties:
+        id:
+          type: string
+        usuarioId:
+          type: integer
+        recomendaciones:
+          type: array
+          items:
+            type: string
+      example:
+        recomendaciones:
+        - pelicula1
+        - pelicula2
+        usuarioId: 456
+        id: id4
+

@@ -1,0 +1,310 @@
+openapi: 3.0.3
+info:
+  title: Usuarios - OpenAPI 3.0
+  version: 1.1.0
+servers:
+- url: /
+tags:
+- name: Usuarios
+  description: Gestión de usuarios
+paths:
+  /usuarios:
+    post:
+      tags:
+      - Usuarios
+      summary: Crear un nuevo usuario
+      operationId: usuarios_post
+      requestBody:
+        description: Datos necesarios para crear un nuevo usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usuarios_body'
+        required: true
+      responses:
+        "201":
+          description: Usuario creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        "400":
+          description: Error en la solicitud (datos incorrectos o incompletos)
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}:
+    get:
+      tags:
+      - Usuarios
+      summary: Obtener un usuario por ID
+      operationId: usuarios_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a obtener
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Datos del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar el nombre de usuario
+      operationId: usuarios_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nuevo nombre completo del usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usuarios_id_body'
+        required: true
+      responses:
+        "200":
+          description: Nombre actualizado con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+    delete:
+      tags:
+      - Usuarios
+      summary: Eliminar un usuario
+      description: Elimina un usuario existente identificado por su ID y su contraseña.
+      operationId: usuarios_id_delete
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contrasea
+        in: query
+        description: Contraseña del usuario para confirmar la eliminación
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Usuario eliminado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "401":
+          description: Contraseña incorrecta
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/correo:
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar el correo del usuario
+      operationId: usuarios_id_correo_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nuevo correo electrónico del usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_correo_body'
+        required: true
+      responses:
+        "200":
+          description: Correo actualizado con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/contraseña:
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar la contraseña del usuario
+      operationId: usuarios_id_contrasea_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nueva contraseña del usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_contrasea_body'
+        required: true
+      responses:
+        "200":
+          description: Contraseña actualizada con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/genero-favorito:
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar el género favorito de un usuario
+      operationId: usuarios_id_genero_favorito_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nuevo género favorito
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_generofavorito_body'
+        required: true
+      responses:
+        "200":
+          description: Género favorito actualizado con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+components:
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre_completo:
+          type: string
+        correo:
+          type: string
+        contraseña:
+          type: string
+        imagen_perfil:
+          type: string
+          description: URL de la imagen de perfil
+        metodo_pago:
+          type: string
+          description: "Método de pago del usuario (tarjeta de crédito, PayPal...)"
+        idioma:
+          type: string
+          description: "Idioma preferido del usuario (\"español\", \"inglés\", \"\
+            portugués\"...)"
+        genero_favorito:
+          type: string
+          description: Género favorito del usuario
+      example:
+        nombre_completo: nombre_completo
+        imagen_perfil: imagen_perfil
+        correo: correo
+        idioma: idioma
+        id: id
+        metodo_pago: metodo_pago
+        genero_favorito: comedia
+        contraseña: contraseña
+    usuarios_body:
+      required:
+      - contraseña
+      - correo
+      - nombre_completo
+      type: object
+      properties:
+        nombre_completo:
+          type: string
+          description: Nombre completo del usuario
+        correo:
+          type: string
+          description: Correo electrónico del usuario
+        contraseña:
+          type: string
+          description: Contraseña del usuario
+        imagen_perfil:
+          type: string
+          description: URL de la imagen de perfil del usuario
+        metodo_pago:
+          type: string
+          description: Método de pago preferido del usuario
+        idioma:
+          type: string
+          description: "Idioma preferido (\"español\", \"inglés\", \"portugués\"...)"
+        genero_favorito:
+          type: string
+          description: Género favorito del usuario
+      example:
+        nombre_completo: Fernando García
+        correo: fer.garcia@example.com
+        contraseña: contraseña123
+        imagen_perfil: https://example.com/perfil.jpg
+        metodo_pago: tarjeta de crédito
+        idioma: español
+        genero_favorito: drama
+    usuarios_id_body:
+      type: object
+      properties:
+        nombre_completo:
+          type: string
+          description: Nuevo nombre completo del usuario
+    inline_response_200:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: Usuario eliminado con éxito
+      example:
+        mensaje: Usuario eliminado con éxito
+    id_correo_body:
+      type: object
+      properties:
+        correo:
+          type: string
+          description: Nuevo correo electrónico
+    id_contrasea_body:
+      type: object
+      properties:
+        contraseña:
+          type: string
+          description: Nueva contraseña
+    id_generofavorito_body:
+      type: object
+      properties:
+        genero_favorito:
+          type: string
+          description: Nuevo género favorito
+      example:
+        genero_favorito: comedia
+

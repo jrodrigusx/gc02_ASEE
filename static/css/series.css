@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #141414;
+    color: white;
+    font-family: 'Netflix Sans', Arial, sans-serif;
+}
+
+/* Estilos de la barra de navegación */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 4%;
+    background-color: #141414;
+    z-index: 1000;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.logo {
+    height: 25px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #e5e5e5;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links .active a {
+    color: white;
+    font-weight: bold;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Estilos del contenedor principal */
+.series-container {
+    padding-top: 100px;
+}
+
+/* Estilos de las filas de contenido */
+.row {
+    margin: 20px 4%;
+    margin-bottom: 40px;
+}
+
+.row-header {
+    font-size: 1.4vw;
+    margin-bottom: 10px;
+    color: #e5e5e5;
+}
+
+/* Estilos de las miniaturas */
+.thumbnails {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 10px 0;
+    scrollbar-width: none; /* Para Firefox */
+}
+
+.thumbnails::-webkit-scrollbar {
+    display: none; /* Para Chrome, Safari y Opera */
+}
+
+.thumbnail {
+    flex: 0 0 auto;
+    width: 16.66%;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    z-index: 2;
+}
+
+.thumbnail img {
+    width: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Efecto de hover en las miniaturas */
+.thumbnail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 4px;
+}
+
+.thumbnail:hover::after {
+    opacity: 1;
+}
+/* Búsqueda */
+.search {
+    position: relative;
+}
+
+.search input {
+    background-color: rgba(0,0,0,0.75);
+    border: 1px solid white;
+    color: white;
+    padding: 8px 40px 8px 10px;
+    border-radius: 4px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .thumbnail {
+        width: 33.33%;
+    }
+    
+    .row-header {
+        font-size: 16px;
+    }
+}
+ 

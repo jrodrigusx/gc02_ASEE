@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda - Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+</head>
+<body>
+    <!-- Mantenemos la misma navegación -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="netflix-logo.png" alt="Netflix" class="logo">
+            <ul class="nav-links">
+                <li class="active"><a href="{{ url_for('home') }}">Inicio</a></li>
+                <li><a href="{{ url_for('series') }}">Series</a></li>
+                <li><a href="{{ url_for('peliculas') }}">Películas</a></li>
+                <li><a href="{{ url_for('mi_lista') }}">Mi lista</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <form action="{{ url_for('search_result') }}" method="POST">
+                <div class="search">
+                    <input type="text" name="query" placeholder="Títulos, personas, géneros">
+                    <i class="search-icon">🔍</i>
+                </div>
+            </form>
+           
+            <div class="profile-menu">
+                <a href="{{ url_for('perfil') }}" class="boton">Perfil</a>
+                <img src="profile-avatar.png" alt="Perfil" class="profile-icon">
+            </div>
+        </div>
+    </nav>
+
+    <main class="search-content">
+        <div class="search-filters">
+            <button class="filter-btn active">Todo</button>
+            <button class="filter-btn">Películas</button>
+            <button class="filter-btn">Series</button>
+            <button class="filter-btn">Documentales</button>
+        </div>
+        <div class="search-results" id="search-results">
+            <h2>Resultados populares</h2>
+            <div class="results-grid">
+                {% if peliculas %}
+                    {% for pelicula in peliculas %}
+                        <div class="result-card">
+                            <img src="movie1.png" alt="Título 1">
+                            <div class="result-info">
+                                <a href="{{url_for('search_content')}}">{{pelicula.titulo}}</a>
+                                <div class="meta-info">
+                                    <span class="duration">Duración: {{pelicula.duracion}}</span>
+                                    <span class="match">98% coincidencia</span>
+                                </div>
+                                <div class="tags">
+                                    <span>{{pelicula.genero}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <!-- Más tarjetas de resultados... -->
+            </div>
+
+            <h2>También te podría gustar</h2>
+            <div class="results-grid">
+                <!-- Más resultados... -->
+            </div>
+        </div>
+
+        <!-- Sección de búsqueda sin resultados (inicialmente oculta) -->
+        <div class="no-results" style="display: none;">
+            <p>Tu búsqueda no produjo ningún resultado.</p>
+            <p>Sugerencias:</p>
+            <ul>
+                <li>Intenta con otras palabras clave</li>
+                <li>¿Estás buscando una película o serie?</li>
+                <li>Prueba usando el título de una película o serie</li>
+                <li>Prueba buscar por actor o director</li>
+            </ul>
+        </div>
+    </main>
+    
+</body>
+</html> 
