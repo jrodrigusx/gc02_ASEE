@@ -7,7 +7,7 @@ from ..models.pelicula import Pelicula  # noqa: E501
 from .. import util
 
 from flask import request, jsonify
-from .... import dbconnection
+from ... import dbconnection
 
 
 def peliculas_genero_genero_get(genero):  # noqa: E501

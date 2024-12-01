@@ -209,7 +209,9 @@ components:
       properties:
         id:
           type: string
-        nombre_completo:
+        nombre:
+          type: string
+        apellidos:
           type: string
         correo:
           type: string
@@ -229,7 +231,8 @@ components:
           type: string
           description: Género favorito del usuario
       example:
-        nombre_completo: nombre_completo
+        nombre: nombre
+        apellidos: apellidos
         imagen_perfil: imagen_perfil
         correo: correo
         idioma: idioma
@@ -239,14 +242,18 @@ components:
         contraseña: contraseña
     usuarios_body:
       required:
+      - apellidos
       - contraseña
       - correo
-      - nombre_completo
+      - nombre
       type: object
       properties:
-        nombre_completo:
+        nombre:
           type: string
           description: Nombre completo del usuario
+        apellidos:
+          type: string
+          description: Apellidos del Usuario
         correo:
           type: string
           description: Correo electrónico del usuario
@@ -266,7 +273,8 @@ components:
           type: string
           description: Género favorito del usuario
       example:
-        nombre_completo: Fernando García
+        nombre: Fernando
+        apellidos: Garcia
         correo: fer.garcia@example.com
         contraseña: contraseña123
         imagen_perfil: https://example.com/perfil.jpg
@@ -276,7 +284,10 @@ components:
     usuarios_id_body:
       type: object
       properties:
-        nombre_completo:
+        nombre:
+          type: string
+          description: Nuevo nombre completo del usuario
+        apellidos:
           type: string
           description: Nuevo nombre completo del usuario
     inline_response_200:

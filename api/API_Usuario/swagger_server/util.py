@@ -2,7 +2,7 @@ import datetime
 
 import six
 import typing
-from . import type_util
+from api.API_Usuario.swagger_server import type_util
 
 
 def _deserialize(data, klass):

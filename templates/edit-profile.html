@@ -22,7 +22,10 @@
                 <!-- Información básica -->
                 <h2 class="section-title">Información básica</h2>
                 <div class="form-group">
-                    <input type="text" id="nombre" name="nombre" value="{{ nombre_completo }}" class="profile-input">
+                    <input type="text" id="nombre" name="nombre" value="{{ nombre }}" class="profile-input">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="apellidos" name="pellidos" value="{{ apellidos }}" class="profile-input">
                 </div>
 
                 <div class="form-group">
@@ -68,14 +71,19 @@
                 {% if error_message %}
                     <p style="color: red;">{{ error_message }}</p>
                 {% endif %}
-
+            </form>
                 <!-- Darse de baja -->
+                 
                 <div class="deactivate-section">
                     <h2 class="section-title danger">Darse de baja</h2>
                     <p class="warning-text">Esta acción es irreversible y eliminará toda tu información</p>
-                    <button type="button" class="btn btn-danger">Dar de baja mi cuenta</button>
+                
+                    <!-- Formulario para eliminar la cuenta -->
+                    <form action="{{ url_for('remove_user') }}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar tu cuenta?')">
+                        <button type="submit" class="btn btn-danger">Dar de baja mi cuenta</button>
+                    </form>
                 </div>
-            </form>
+            
         </div>
     </div>
 </body>

@@ -1,16 +1,17 @@
 import oracledb as db
 #from . import database
-from .API_Contenidos.swagger_server.models.pelicula import Pelicula
-from .API_Contenidos.swagger_server.models.actor import Actor
-from .API_Contenidos.swagger_server.models.director import Director
-from .API_Contenidos.swagger_server.models.capitulo import Capitulo
-from .API_Contenidos.swagger_server.models.serie import Serie
-from .API_Contenidos.swagger_server.models.temporada import Temporada
-from .API_Usuario.swagger_server.models.usuario import Usuario
-from .API_Visualizaciones.swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas
-from .API_Visualizaciones.swagger_server.models.visualizaciones_series import VisualizacionesSeries
-from .API_Visualizaciones.swagger_server.models.recomendaciones_peliculas import RecomendacionesPeliculas
-from .API_Visualizaciones.swagger_server.models.recomendaciones_series import RecomendacionesSeries
+import cx_Oracle
+from api.API_Contenidos.swagger_server.models.pelicula import Pelicula
+from api.API_Contenidos.swagger_server.models.actor import Actor
+from api.API_Contenidos.swagger_server.models.director import Director
+from api.API_Contenidos.swagger_server.models.capitulo import Capitulo
+from api.API_Contenidos.swagger_server.models.serie import Serie
+from api.API_Contenidos.swagger_server.models.temporada import Temporada
+from api.API_Usuario.swagger_server.models.usuario import Usuario
+from api.API_Visualizaciones.swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas
+from api.API_Visualizaciones.swagger_server.models.visualizaciones_series import VisualizacionesSeries
+from api.API_Visualizaciones.swagger_server.models.recomendaciones_peliculas import RecomendacionesPeliculas
+from api.API_Visualizaciones.swagger_server.models.recomendaciones_series import RecomendacionesSeries
 
 def dbConectar():
     ip = "localhost"
@@ -42,7 +43,7 @@ def dbSignUp(email=str, firstName=str, secondName=str, password1=str, password2=
         print(secondName)
         print(password1)
         print(password2)
-        consulta = "INSERT INTO asee_users VALUES(:email, :firstName, :secondName, :password1)"
+        consulta = "INSERT INTO asee_users (email, firstname, secondname, passwd) VALUES(:email, :firstName, :secondName, :password1)"
         if(password1 == password2):
             cursor.execute(consulta, [email, firstName, secondName, password1])
             print("Tupla insertada correctamente")
@@ -66,7 +67,7 @@ def dbLogIn(email=str, password=str):
         cursor = conexion.cursor()
         print(email)
         print(password)
-        consulta = "SELECT id,email, passwd FROM asee_users WHERE email = :email AND passwd = :password"
+        consulta = "SELECT user_id,email, passwd FROM asee_users WHERE email = :email AND passwd = :password"
         cursor.execute(consulta, [email, password])
         resul = cursor.fetchone()
         if(cursor.rowcount == 1):
@@ -75,14 +76,19 @@ def dbLogIn(email=str, password=str):
                 print('Usuario y contraseña correctos')
             else:
                 print('La contraseña no es correcta')
-                return resul
+                return False
         else:
             print("Usuario no existente:",cursor.rowcount)
             return False
         print('------------------------------')
+        
         cursor.close()
         conexion.commit()
-        return True
+        if resul[0] is None:
+            return None
+        else:
+            return resul[0]
+       
     except db.DatabaseError as error:
         print("Error. No se ha podido iniciar sesión")
         print(error)
@@ -485,20 +491,26 @@ def dbGetUser(id):
         imagen = "imagen.jpg"
         mpago = "Paypal"
         idioma = "Español"
-        usuario = Usuario(tupla[0], tupla[2], tupla[1], tupla[4], imagen, mpago, idioma, tupla[5])
+        
+        if tupla is None:
+            return None
+
+        usuario = Usuario(tupla[0], tupla[2], tupla[3], tupla[1],tupla[4], imagen, mpago, idioma, tupla[5])
+        
         cursor.close()
         return usuario.to_dict()
     except db.DatabaseError as error:
         print("Error: No se puede obtener el usuario")
         print(error)
 
-
-def dbModifyUserName(id, nombre):
+def dbModifyUserName(id, nombre,apellidos):
     print("---dbModifyUserName---")
     try:
         cursor = conexion.cursor()
-        consulta = "UPDATE asee_users SET nombre = :nombre WHERE user_id = :id"
+        consulta = "UPDATE asee_users SET firstname = :nombre WHERE user_id = :id"
         cursor.execute(consulta, [nombre, id])
+        consulta2 = "UPDATE asee_users SET secondname = :apellidos WHERE user_id = :id"
+        cursor.execute(consulta2, [apellidos, id])
         
         if cursor.rowcount == 1:
             print("Nombre del usuario ", id, " modificado. Nuevo nombre: ", nombre)
@@ -508,6 +520,7 @@ def dbModifyUserName(id, nombre):
             respuesta = False
         
         cursor.close()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar el nombre del usuario")
@@ -529,6 +542,7 @@ def dbModifyFavGenre(id, genero):
             respuesta = False
         
         cursor.close()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar el genero favorito del usuario")
@@ -550,6 +564,7 @@ def dbModifylEmail(id, email):
             respuesta = False
         
         cursor.close()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar el email del usuario")
@@ -571,6 +586,7 @@ def dbModifyPassword(id, password):
             respuesta = False
         
         cursor.close()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar la contraseña del usuario")
@@ -579,12 +595,10 @@ def dbModifyPassword(id, password):
 
 def dbRemoveUser(id):
     print("---dbRemoveUser---")
-
     try:
         cursor = conexion.cursor()
         consulta = "DELETE FROM asee_users WHERE user_id = :id"
         cursor.execute(consulta, [id])
-        resul = cursor.fetchone()
         if(cursor.rowcount == 1):
             print("Usuario eliminado correctamente")
             respuesta = True
@@ -598,6 +612,7 @@ def dbRemoveUser(id):
     except db.DatabaseError as error:
         print("Error. No se ha podido eliminar el usuario")
         print(error)
+        conexion.rollback()
         return False
 
 def dbGetMovieViews(movie_id):
@@ -746,4 +761,18 @@ def dbSerieRecomendations(user_id):
         print("Error. No se han podido obtener las recomendaciones de series")
         print(error)
 
+def dbGetMovieHistory(user_id):
+    try:
+        cursor = conexion.cursor()
+        consul = "SELECT movie FROM asee_user_movie WHERE user_id = :user_id"
+        cursor.execute(consul, [user_id,])
+        peliculas = []
+        for tupla in cursor:
+            pelicula = dbGetMovieById(tupla[0])
+            peliculas.append(pelicula)
+        return peliculas
+    except db.DatabaseError as error:
+        print("Error. No se han podido actualizar las visualizaciones de usuario")
+        print(error)
+        return False
 conexion = dbConectar()

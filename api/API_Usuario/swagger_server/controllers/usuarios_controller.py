@@ -2,13 +2,13 @@ import connexion
 import six
 
 
-from ..models.id_contrasea_body import IdContraseaBody  # noqa: E501
-from ..models.id_correo_body import IdCorreoBody  # noqa: E501
-from ..models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
-from ..models.inline_response200 import InlineResponse200  # noqa: E501
-from ..models.usuario import Usuario  # noqa: E501
-from ..models.usuarios_body import UsuariosBody  # noqa: E501
-from ..models.usuarios_id_body import UsuariosIdBody  # noqa: E501
+from api.API_Usuario.swagger_server.models.id_contrasea_body import IdContraseaBody
+from api.API_Usuario.swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
+from api.API_Usuario.swagger_server.models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
+from api.API_Usuario.swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
+from api.API_Usuario.swagger_server.models.usuario import Usuario  # noqa: E501
+from api.API_Usuario.swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
+from api.API_Usuario.swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
 from .. import util
 
 from flask import request, jsonify
@@ -72,7 +72,7 @@ def usuarios_id_correo_put(body, id):  # noqa: E501
         return {"error": "Solicitud inválida"}, 400
 
 
-def usuarios_id_delete(id, contrasea):  # noqa: E501
+def usuarios_id_delete(id):  # noqa: E501
     """Eliminar un usuario
 
     Elimina un usuario existente identificado por su ID y su contraseña. # noqa: E501
@@ -85,11 +85,15 @@ def usuarios_id_delete(id, contrasea):  # noqa: E501
     :rtype: InlineResponse200
     """
     usuario = dbconnection.dbGetUser(id)  # Llama a la función para obtener el usuario por ID
-    if usuario and usuario["contrasea"]==contrasea:  # Verifica la contraseña
+    if usuario:  
         result = dbconnection.dbRemoveUser(id)  # Llama a la función de eliminación en la base de datos
         if result:
-            return jsonify({"message": "Usuario eliminado exitosamente"}), 200
-    return jsonify({"error": "ID o contraseña incorrectos"}), 404
+            print("Usuario eliminado correctamente")
+            return True
+        else:
+            return False
+    else:
+        return False
 
 
 def usuarios_id_genero_favorito_put(body, id):  # noqa: E501
@@ -145,11 +149,12 @@ def usuarios_id_put(body, id):  # noqa: E501
     :rtype: None
     """
    
-    nombre = body.get('nombre_completo')
+    nombre = body.get('nombre')
+    apellidos= body.get('apellidos')
 
     if nombre:
         try:
-            if dbconnection.dbModifyUserName(id, nombre):
+            if dbconnection.dbModifyUserName(id, nombre,apellidos):
                     return {"mensaje": "Usuario actualizado correctamente"}, 200
             else:
                 return {"error": "No se pudo actualizar el usuario"}, 400
@@ -181,5 +186,5 @@ def usuarios_post(body):  # noqa: E501
         return jsonify({"error": "Faltan datos"}), 400
 
     # Crear el nuevo usuario
-    nuevo_usuario = dbconnection.dbSignUp(correo=correo,firstname=firstname,secondname=secondname, password1=password1,password2=password2)
+    nuevo_usuario = dbconnection.dbSignUp(email=correo,firstName=firstname,secondName=secondname, password1=password1,password2=password2)
     return {"mensaje": "Usuario creado correctamente", "usuario": correo}, 201

@@ -5,14 +5,14 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from ..models.id_contrasea_body import IdContraseaBody  # noqa: E501
-from ..models.id_correo_body import IdCorreoBody  # noqa: E501
-from ..models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
-from ..models.inline_response200 import InlineResponse200  # noqa: E501
-from ..models.usuario import Usuario  # noqa: E501
-from ..models.usuarios_body import UsuariosBody  # noqa: E501
-from ..models.usuarios_id_body import UsuariosIdBody  # noqa: E501
-from ..test import BaseTestCase
+from swagger_server.models.id_contrasea_body import IdContraseaBody  # noqa: E501
+from swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
+from swagger_server.models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
+from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
+from swagger_server.models.usuario import Usuario  # noqa: E501
+from swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
+from swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
+from swagger_server.test import BaseTestCase
 
 
 class TestUsuariosController(BaseTestCase):

@@ -5,8 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from ..models.base_model_ import Model
-from .. import util
+from api.API_Usuario.swagger_server.models.base_model_ import Model
+from api.API_Usuario.swagger_server import util
 
 
 class Usuario(Model):
@@ -14,13 +14,15 @@ class Usuario(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, nombre_completo: str=None, correo: str=None, contrasea: str=None, imagen_perfil: str=None, metodo_pago: str=None, idioma: str=None, genero_favorito: str=None):  # noqa: E501
+    def __init__(self, id: str=None, nombre: str=None, apellidos: str=None, correo: str=None, contrasea: str=None, imagen_perfil: str=None, metodo_pago: str=None, idioma: str=None, genero_favorito: str=None):  # noqa: E501
         """Usuario - a model defined in Swagger
 
         :param id: The id of this Usuario.  # noqa: E501
         :type id: str
-        :param nombre_completo: The nombre_completo of this Usuario.  # noqa: E501
-        :type nombre_completo: str
+        :param nombre: The nombre of this Usuario.  # noqa: E501
+        :type nombre: str
+        :param apellidos: The apellidos of this Usuario.  # noqa: E501
+        :type apellidos: str
         :param correo: The correo of this Usuario.  # noqa: E501
         :type correo: str
         :param contrasea: The contrasea of this Usuario.  # noqa: E501
@@ -36,7 +38,8 @@ class Usuario(Model):
         """
         self.swagger_types = {
             'id': str,
-            'nombre_completo': str,
+            'nombre': str,
+            'apellidos': str,
             'correo': str,
             'contrasea': str,
             'imagen_perfil': str,
@@ -47,7 +50,8 @@ class Usuario(Model):
 
         self.attribute_map = {
             'id': 'id',
-            'nombre_completo': 'nombre_completo',
+            'nombre': 'nombre',
+            'apellidos': 'apellidos',
             'correo': 'correo',
             'contrasea': 'contraseña',
             'imagen_perfil': 'imagen_perfil',
@@ -56,7 +60,8 @@ class Usuario(Model):
             'genero_favorito': 'genero_favorito'
         }
         self._id = id
-        self._nombre_completo = nombre_completo
+        self._nombre = nombre
+        self._apellidos = apellidos
         self._correo = correo
         self._contrasea = contrasea
         self._imagen_perfil = imagen_perfil
@@ -97,25 +102,46 @@ class Usuario(Model):
         self._id = id
 
     @property
-    def nombre_completo(self) -> str:
-        """Gets the nombre_completo of this Usuario.
+    def nombre(self) -> str:
+        """Gets the nombre of this Usuario.
 
 
-        :return: The nombre_completo of this Usuario.
+        :return: The nombre of this Usuario.
         :rtype: str
         """
-        return self._nombre_completo
+        return self._nombre
 
-    @nombre_completo.setter
-    def nombre_completo(self, nombre_completo: str):
-        """Sets the nombre_completo of this Usuario.
+    @nombre.setter
+    def nombre(self, nombre: str):
+        """Sets the nombre of this Usuario.
 
 
-        :param nombre_completo: The nombre_completo of this Usuario.
-        :type nombre_completo: str
+        :param nombre: The nombre of this Usuario.
+        :type nombre: str
         """
 
-        self._nombre_completo = nombre_completo
+        self._nombre = nombre
+
+    @property
+    def apellidos(self) -> str:
+        """Gets the apellidos of this Usuario.
+
+
+        :return: The apellidos of this Usuario.
+        :rtype: str
+        """
+        return self._apellidos
+
+    @apellidos.setter
+    def apellidos(self, apellidos: str):
+        """Sets the apellidos of this Usuario.
+
+
+        :param apellidos: The apellidos of this Usuario.
+        :type apellidos: str
+        """
+
+        self._apellidos = apellidos
 
     @property
     def correo(self) -> str:

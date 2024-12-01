@@ -5,8 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from ..models.base_model_ import Model
-from .. import util
+from api.API_Usuario.swagger_server.models.base_model_ import Model
+from api.API_Usuario.swagger_server import util
 
 
 class UsuariosIdBody(Model):
@@ -14,20 +14,25 @@ class UsuariosIdBody(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nombre_completo: str=None):  # noqa: E501
+    def __init__(self, nombre: str=None, apellidos: str=None):  # noqa: E501
         """UsuariosIdBody - a model defined in Swagger
 
-        :param nombre_completo: The nombre_completo of this UsuariosIdBody.  # noqa: E501
-        :type nombre_completo: str
+        :param nombre: The nombre of this UsuariosIdBody.  # noqa: E501
+        :type nombre: str
+        :param apellidos: The apellidos of this UsuariosIdBody.  # noqa: E501
+        :type apellidos: str
         """
         self.swagger_types = {
-            'nombre_completo': str
+            'nombre': str,
+            'apellidos': str
         }
 
         self.attribute_map = {
-            'nombre_completo': 'nombre_completo'
+            'nombre': 'nombre',
+            'apellidos': 'apellidos'
         }
-        self._nombre_completo = nombre_completo
+        self._nombre = nombre
+        self._apellidos = apellidos
 
     @classmethod
     def from_dict(cls, dikt) -> 'UsuariosIdBody':
@@ -41,24 +46,47 @@ class UsuariosIdBody(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def nombre_completo(self) -> str:
-        """Gets the nombre_completo of this UsuariosIdBody.
+    def nombre(self) -> str:
+        """Gets the nombre of this UsuariosIdBody.
 
         Nuevo nombre completo del usuario  # noqa: E501
 
-        :return: The nombre_completo of this UsuariosIdBody.
+        :return: The nombre of this UsuariosIdBody.
         :rtype: str
         """
-        return self._nombre_completo
+        return self._nombre
 
-    @nombre_completo.setter
-    def nombre_completo(self, nombre_completo: str):
-        """Sets the nombre_completo of this UsuariosIdBody.
+    @nombre.setter
+    def nombre(self, nombre: str):
+        """Sets the nombre of this UsuariosIdBody.
 
         Nuevo nombre completo del usuario  # noqa: E501
 
-        :param nombre_completo: The nombre_completo of this UsuariosIdBody.
-        :type nombre_completo: str
+        :param nombre: The nombre of this UsuariosIdBody.
+        :type nombre: str
         """
 
-        self._nombre_completo = nombre_completo
+        self._nombre = nombre
+
+    @property
+    def apellidos(self) -> str:
+        """Gets the apellidos of this UsuariosIdBody.
+
+        Nuevo nombre completo del usuario  # noqa: E501
+
+        :return: The apellidos of this UsuariosIdBody.
+        :rtype: str
+        """
+        return self._apellidos
+
+    @apellidos.setter
+    def apellidos(self, apellidos: str):
+        """Sets the apellidos of this UsuariosIdBody.
+
+        Nuevo nombre completo del usuario  # noqa: E501
+
+        :param apellidos: The apellidos of this UsuariosIdBody.
+        :type apellidos: str
+        """
+
+        self._apellidos = apellidos
