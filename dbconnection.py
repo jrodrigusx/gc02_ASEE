@@ -502,15 +502,13 @@ def dbGetUser(id):
         print("Error: No se puede obtener el usuario")
         print(error)
 
-
 def dbModifyUserName(id, nombre,apellidos):
     print("---dbModifyUserName---")
     try:
         cursor = conexion.cursor()
-        consulta = "UPDATE asee_users SET firstname = :nombre WHERE user_id = :id"
-        cursor.execute(consulta, [nombre, id])
-        consulta2 = "UPDATE asee_users SET secondname = :apellidos WHERE user_id = :id"
-        cursor.execute(consulta2, [apellidos, id])
+        print(nombre, apellidos)
+        consulta = "UPDATE asee_users SET firstname = :nombre, secondname =:apellidos WHERE user_id = :id"
+        cursor.execute(consulta, [nombre, apellidos, id])
         
         if cursor.rowcount == 1:
             print("Nombre del usuario ", id, " modificado. Nuevo nombre: ", nombre)

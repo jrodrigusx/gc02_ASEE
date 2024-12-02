@@ -49,7 +49,6 @@ def login():
         session['genero_favorito'] = usuario.get('genero_favorito')
 
         # Redirigir al home tras un login exitoso
-        print("DATOS",session)
         return redirect(url_for('home'))
     except KeyError as e:
         print(f"Error al establecer la sesión: clave faltante en 'usuario': {e}")
@@ -171,7 +170,6 @@ def search_result():
     # Si es GET, muestra la página inicial de búsqueda
     return render_template('search.html')
 
-
 @app.route('/perfil/')
 def perfil():
     if 'id' not in session:
@@ -184,9 +182,6 @@ def perfil():
         "email": session['email'],
         "genero_favorito": session['genero_favorito']
     }
-
-    print("sesion: ",session)
-    print("Datos del usuario a renderizar:", user_data)
     
     return render_template('user-profile.html', user_data=user_data)
 
@@ -199,6 +194,7 @@ def edit_perfil():
         email = session['email']
         password = session['password']
         genero_favorito = session['genero_favorito']
+        
         return render_template('edit-profile.html', id_usuario=id_usuario,
                                nombre=nombre,apellidos=apellidos,
                                email=email,
@@ -211,7 +207,7 @@ def edit_perfil():
         new_email = request.form['email']
         new_password = request.form['password1']
         new_password2 = request.form['password2']
-        new_genero = request.form['genero_favorito']
+        new_genero = request.form.get('genero_favorito', None)
         
         if new_password != new_password2:
             error_message = "Las contraseñas no coinciden. Por favor, intente de nuevo."
@@ -230,7 +226,9 @@ def edit_perfil():
                         "nombre": new_name,
                         "apellidos": new_secondname
                     }
+                    print(f"Llamando a usuarios_id_put con: {bodyname}, ID: {session['id']}")
                     usuarios_controller.usuarios_id_put(bodyname, session['id'])
+                    print(f"Exitosa")
                     
                     session['nombre'] = new_name  # Actualizamos la sesión con el nuevo nombre
                     session['apellidos'] = new_secondname
@@ -240,7 +238,7 @@ def edit_perfil():
                     bodycorreo = {
                         "correo": new_email
                     }
-                    usuarios_controller.usuarios_id_correo_put(bodycorreo, id)
+                    usuarios_controller.usuarios_id_correo_put(bodycorreo, session['id'])
                     session['email'] = new_email  # Actualizamos la sesión con el nuevo email
 
                 if new_password != '' and new_password != session['password']:
@@ -248,7 +246,7 @@ def edit_perfil():
                     bodypassword = {
                         "contrasea": new_password
                     }
-                    usuarios_controller.usuarios_id_contrasea_put(bodypassword, id)
+                    usuarios_controller.usuarios_id_contrasea_put(bodypassword, session['id'])
                     session['password'] = new_password  # Actualizamos la sesión con la nueva contraseña
 
                 if new_genero != session['genero_favorito']:
@@ -256,7 +254,7 @@ def edit_perfil():
                     bodygenero = {
                         "genero_favorito": new_genero
                     }
-                    usuarios_controller.usuarios_id_genero_favorito_put(bodygenero,id)
+                    usuarios_controller.usuarios_id_genero_favorito_put(bodygenero,session['id'])
                     session['genero_favorito'] = new_genero  # Actualizamos la sesión con el nuevo género
 
                 # Redirigir a la página de perfil con los datos actualizados
