@@ -7,7 +7,7 @@ from ..models.serie import Serie  # noqa: E501
 from .. import util
 
 from flask import request, jsonify
-from ... import dbconnection
+import dbconnection
 
 def series_genero_genero_get(genero):  # noqa: E501
     """Obtener una serie por genero

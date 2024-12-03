@@ -12,7 +12,7 @@ from api.API_Usuario.swagger_server.models.usuarios_id_body import UsuariosIdBod
 from .. import util
 
 from flask import request, jsonify
-from .... import dbconnection 
+import dbconnection 
 
 import oracledb
 from flask import jsonify, request
