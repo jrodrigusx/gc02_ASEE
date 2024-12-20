@@ -25,6 +25,22 @@ body {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
 }
+.image-overlay {
+    position: absolute;
+    top: 50%; /* Centra la imagen verticalmente */
+    left: 0; /* Coloca la imagen en el lado izquierdo */
+    transform: translate(0, -50%); /* Mantiene la imagen centrada verticalmente */
+    width: 35%; /* Ajusta el tamaño de la imagen */
+    height: 75%; /* Ajusta el tamaño de la imagen */
+  }
+  .image-overlay2 {
+    position: absolute;
+    top: 50%; /* Centra la imagen verticalmente */
+    right: 0; /* Coloca la imagen en el lado derecho */
+    transform: translate(0, -50%); /* Mantiene la imagen centrada verticalmente */
+    width: 35%; /* Ajusta el tamaño de la imagen */
+    height: 75%; /* Ajusta el tamaño de la imagen */  
+  }
 
 .register-container {
     position: relative;

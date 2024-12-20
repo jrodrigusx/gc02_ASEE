@@ -10,7 +10,7 @@ body {
 }
 
 .background {
-  background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/fc164b4b-f085-44ee-bb7f-ec7df8539eff/d23a1608-7d90-4da1-93d6-bae2fe60a69b/ES-es-20230814-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+  background-image: none;
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -26,16 +26,37 @@ body {
   background: rgba(0, 0, 0, 0.5);
 }
 
+.image-overlay {
+  position: absolute;
+  top: 50%; /* Centra la imagen verticalmente */
+  left: 0; /* Coloca la imagen en el lado izquierdo */
+  transform: translate(0, -50%); /* Mantiene la imagen centrada verticalmente */
+  width: 35%; /* Ajusta el tamaño de la imagen */
+  height: 75%; /* Ajusta el tamaño de la imagen */
+}
+.image-overlay2 {
+  position: absolute;
+  top: 50%; /* Centra la imagen verticalmente */
+  right: 0; /* Coloca la imagen en el lado derecho */
+  transform: translate(0, -50%); /* Mantiene la imagen centrada verticalmente */
+  width: 35%; /* Ajusta el tamaño de la imagen */
+  height: 75%; /* Ajusta el tamaño de la imagen */
+  
+   
+}
+
 .login-container {
   position: relative;
   background: rgba(0, 0, 0, 0.75);
   padding: 60px 68px 40px;
-  border-radius: 4px;
+  border-radius: 10px;
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
   top: 50%;
   transform: translateY(-50%);
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .login-title {
@@ -127,4 +148,6 @@ input:not(:placeholder-shown) + label {
 }
 
 .help-link:hover {
-  text-decoration:
+  text-decoration:none
+}
+

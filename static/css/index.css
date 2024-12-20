@@ -19,7 +19,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 60px;
+    padding: 15px 60px;
     background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0));
     z-index: 1000;
 }
@@ -27,11 +27,13 @@ body {
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
 }
 
 .logo {
-    height: 25px;
+    width: 100px; /* Ajusta el tamaño según lo que necesites */
+    height: auto; /* Mantiene la proporción de la imagen */
+    background-color: transparent;
 }
 
 .nav-links {
@@ -43,7 +45,11 @@ body {
 .nav-links a {
     color: #e5e5e5;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 20px;
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center
 }
 
 .nav-links .active a {

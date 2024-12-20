@@ -1,0 +1,69 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - api_usuario
+      - api_contenidos
+      - api_visualizaciones
+    networks:
+      - app-network
+
+  api_usuario:
+    build:
+      context: ./API_Usuario
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - FLASK_APP=swagger_server.__main__.py
+    networks:
+      - app-network
+
+  api_contenidos:
+    build:
+      context: ./API_Contenidos
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_APP=swagger_server.__main__.py
+    networks:
+      - app-network
+
+  api_visualizaciones:
+    build:
+      context: ./API_Visualizaciones
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    environment:
+      - FLASK_APP=swagger_server.__main__.py
+    networks:
+      - app-network
+
+  
+
+  web:
+    build: .
+    ports:
+      - "80:80"  # Apache servirá archivos estáticos en el puerto 80
+      - "5004:5000"  # La API de Python se ejecutará en el puerto 5000
+    volumes:
+      - ./static:/var/www/html/static  # Volumen para los archivos estáticos
+      - ./templates:/var/www/html  # Volumen para los templates
+      - ./app.py:/app/app.py  # Volumen para el archivo principal
+      - ./:/app
+
+
+networks:
+  app-network:
+   
+
+
+  
+

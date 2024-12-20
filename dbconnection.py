@@ -1,25 +1,25 @@
 import oracledb as db
 #from . import database
-import cx_Oracle
-from api.API_Contenidos.swagger_server.models.pelicula import Pelicula
-from api.API_Contenidos.swagger_server.models.actor import Actor
-from api.API_Contenidos.swagger_server.models.director import Director
-from api.API_Contenidos.swagger_server.models.capitulo import Capitulo
-from api.API_Contenidos.swagger_server.models.serie import Serie
-from api.API_Contenidos.swagger_server.models.temporada import Temporada
-from api.API_Usuario.swagger_server.models.usuario import Usuario
-from api.API_Visualizaciones.swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas
-from api.API_Visualizaciones.swagger_server.models.visualizaciones_series import VisualizacionesSeries
-from api.API_Visualizaciones.swagger_server.models.recomendaciones_peliculas import RecomendacionesPeliculas
-from api.API_Visualizaciones.swagger_server.models.recomendaciones_series import RecomendacionesSeries
+from API_Contenidos.swagger_server.models.pelicula import Pelicula
+from API_Contenidos.swagger_server.models.actor import Actor
+from API_Contenidos.swagger_server.models.director import Director
+from API_Contenidos.swagger_server.models.capitulo import Capitulo
+from API_Contenidos.swagger_server.models.serie import Serie
+from API_Contenidos.swagger_server.models.temporada import Temporada
+from API_Usuario.swagger_server.models.usuario import Usuario
+from API_Visualizaciones.swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas
+from API_Visualizaciones.swagger_server.models.visualizaciones_series import VisualizacionesSeries
+from API_Visualizaciones.swagger_server.models.recomendaciones_peliculas import RecomendacionesPeliculas
+from API_Visualizaciones.swagger_server.models.recomendaciones_series import RecomendacionesSeries
 
 def dbConectar():
-    ip = "localhost"
+    ip = "host.docker.internal"
     puerto = 1521
     s_id = "xe"
 
     usuario = "system"
     contrasena = "12345"
+    dsn = db.makedsn(ip, puerto, s_id)
 
     print("---dbConectar---")
     print("---Conectando a Oracle---")
@@ -108,18 +108,17 @@ def dbPrint():
 
 def dbGetActors():
     print("---dbGetActors---")
-    actores = []
+    actors = []
     try:
         cursor = conexion.cursor()
         consulta = "SELECT * FROM asee_actors"
         cursor.execute(consulta)
         for tupla in cursor:
             print(tupla)
-            actor = Actor(tupla[0], tupla[1], tupla[2])
-            actores.append(actor.to_dict())
+            actors.append(tupla)
         print("Total actores:", cursor.rowcount)
         cursor.close()
-        return actores
+        return actors
     except db.DatabaseError as error:
         print("Error: No se pueden obtener los actores")
         print(error)
@@ -133,9 +132,8 @@ def dbGetActor(actor_id):
         cursor.execute(consulta, [actor_id])
         tupla = cursor.fetchone()
         print(tupla)
-        actor = Actor(tupla[0], tupla[1], tupla[2])
         cursor.close()
-        return actor.to_dict()
+        return tupla
     except db.DatabaseError as error:
         print("Error: No se puede obtener el actor")
         print(error)
@@ -149,8 +147,7 @@ def dbGetDirectors():
         cursor.execute(consulta)
         for tupla in cursor:
             print(tupla)
-            director = Director(tupla[0], tupla[1], tupla[2])
-            directores.append(director.to_dict())
+            directores.append(tupla)
         print("Total directores:", cursor.rowcount)
         cursor.close()
         return directores
@@ -167,18 +164,14 @@ def dbGetDirectorById(id):
         cursor.execute(consulta, [id])
         tupla = cursor.fetchone()
         print(tupla)
-        director = Director(tupla[0], tupla[1], tupla[2])
         cursor.close()
-        return director.to_dict()
+        return tupla
     except db.DatabaseError as error:
         print("Error: No se puede obtener el director")
         print(error)
 
 def dbGetSeries():
     print("---dbGetSeries---")
-    actores = []
-    temporadas = []
-    capitulos = []
     series = []
     
     try:
@@ -187,11 +180,7 @@ def dbGetSeries():
         cursor.execute(consulta)
         for tupla in cursor:
             print(tupla)
-            actores = dbGetActorsInSerie(tupla[0])
-            temporadas = dbGetSeasonsOfSerie(tupla[0])
-            capitulos = dbGetEpisodesOfSerie(tupla[0])
-            serie = Serie(tupla[0], tupla[1], tupla[2], tupla[3], actores, temporadas, capitulos)
-            series.append(serie.to_dict())
+            series.append(tupla)
             
         print("Total series:", cursor.rowcount)
         cursor.close()
@@ -203,7 +192,6 @@ def dbGetSeries():
 def dbGetSeasonsOfSerie(id_serie):
     print("---dbGetSeasonsOfSerie---")
     temporadas = []
-    capitulos = []
     
     try:
         cursor = conexion.cursor()
@@ -211,9 +199,7 @@ def dbGetSeasonsOfSerie(id_serie):
         cursor.execute(consulta, [id_serie])
         for tupla in cursor:
             print(tupla)
-            capitulos = dbGetEpisodesOfSeason(id_serie, tupla[0])
-            temporada = Temporada(tupla[0], tupla[2], tupla[3], capitulos)
-            temporadas.append(temporada.to_dict())
+            temporadas.append(tupla)
         
         print("Total temporadas de la serie ", id_serie, ": " , cursor.rowcount)
         cursor.close()
@@ -232,9 +218,7 @@ def dbGetEpisodesOfSeason(id_serie, id_season):
         cursor.execute(consulta, [id_season, id_serie])
         for tupla in cursor:
             print(tupla)
-            director = dbGetDirectorById(tupla[7])
-            capitulo = Capitulo(tupla[0], tupla[1], tupla[5], tupla[4], tupla[6], director)
-            capitulos.append(capitulo.to_dict())
+            capitulos.append(tupla)
         print("Total capitulos de la serie ", id_serie, " y la temporada " , id_season, " es: ", cursor.rowcount)
         cursor.close()
         return capitulos
@@ -252,9 +236,7 @@ def dbGetEpisodesOfSerie(id_serie):
         cursor.execute(consulta, [id_serie])
         for tupla in cursor:
             print(tupla)
-            director = dbGetDirectorById(tupla[7])
-            capitulo = Capitulo(tupla[0], tupla[1], tupla[5], tupla[4], tupla[6], director)
-            capitulos.append(capitulo.to_dict())
+            capitulos.append(tupla)
             
         print("Total capitulos de la serie ", id_serie, " es: ", cursor.rowcount)
         cursor.close()
@@ -265,7 +247,6 @@ def dbGetEpisodesOfSerie(id_serie):
 
 def dbGetMovies():
     print("---dbGetMovies---")
-    actores = []
     peliculas = []
     try:
         cursor = conexion.cursor()
@@ -273,10 +254,7 @@ def dbGetMovies():
         cursor.execute(consulta)
         for tupla in cursor:
             print(tupla)
-            director = dbGetDirectorById(tupla[4])
-            actores = dbGetActorsInMovie(tupla[0])
-            pelicula = Pelicula(tupla[0], tupla[1], tupla[2], tupla[3], director, actores, tupla[5])
-            peliculas.append(pelicula.to_dict())
+            peliculas.append(tupla)
         print("Total películas:", cursor.rowcount)
         cursor.close()
         return peliculas
@@ -286,7 +264,6 @@ def dbGetMovies():
 
 def dbGetMovieById(movie_id):
     print("---dbGetMovieById---")
-    actores = []
 
     try:
         cursor = conexion.cursor()
@@ -294,33 +271,23 @@ def dbGetMovieById(movie_id):
         cursor.execute(consulta, [movie_id])
         tupla = cursor.fetchone()
         print(tupla)
-        director = dbGetDirectorById(tupla[4])
-        actores = dbGetActorsInMovie(tupla[0])
-        pelicula = Pelicula(tupla[0], tupla[1], tupla[2], tupla[3], director, actores, tupla[5])
         cursor.close()
-        return pelicula.to_dict()
+        return tupla
     except db.DatabaseError as error:
         print("Error: No se puede obtener la película")
         print(error)
 
 def dbGetSerieById(id_serie):
     print("---dbGetSerieById---")
-    actores = []
-    temporadas = []
-    capitulos = []
-    
+
     try:
         cursor = conexion.cursor()
         consulta = "SELECT * FROM asee_series WHERE serie_id = :id_serie"
         cursor.execute(consulta, [id_serie])
         tupla = cursor.fetchone()
         print(tupla)
-        actores = dbGetActorsInSerie(id_serie)
-        temporadas = dbGetSeasonsOfSerie(id_serie)
-        capitulos = dbGetEpisodesOfSerie(id_serie)
-        serie = Serie(tupla[0], tupla[1], tupla[2], tupla[3], actores, temporadas, capitulos)
         cursor.close()
-        return serie.to_dict()
+        return tupla
     except db.DatabaseError as error:
         print("Error: No se puede obtener la serie ", id_serie)
         print(error)
@@ -336,10 +303,7 @@ def dbGetMoviesByTitle(titulo):
         cursor.execute(consulta, [titulo_aux])
         for tupla in cursor:
             print(tupla)
-            director = dbGetDirectorById(tupla[4]) 
-            actores = dbGetActorsInMovie(tupla[0])
-            pelicula = Pelicula(tupla[0], tupla[1], tupla[2], tupla[3], director, actores, tupla[5])
-            peliculas.append(pelicula.to_dict())
+            peliculas.append(tupla)
         cursor.close()
         return peliculas
     except db.DatabaseError as error:
@@ -348,9 +312,6 @@ def dbGetMoviesByTitle(titulo):
 
 def dbGetSeriesByTitle(titulo):
     print("---dbGetSeriesByTitle---")
-    actores = []
-    temporadas = []
-    capitulos = []
     series = []
     
     try:
@@ -360,11 +321,7 @@ def dbGetSeriesByTitle(titulo):
         cursor.execute(consulta, [titulo_aux])
         for tupla in cursor:
             print(tupla)
-            actores = dbGetActorsInSerie(tupla[0])
-            temporadas = dbGetSeasonsOfSerie(tupla[0])
-            capitulos = dbGetEpisodesOfSerie(tupla[0])
-            serie = Serie(tupla[0], tupla[1], tupla[2], tupla[3], actores, temporadas, capitulos)
-            series.append(serie.to_dict())
+            series.append(tupla)
         cursor.close()
         return series
     except db.DatabaseError as error:
@@ -374,7 +331,6 @@ def dbGetSeriesByTitle(titulo):
 def dbGetMoviesByGenre(genero):
     print("---dbGetMoviesByGenre---")
     peliculas = []
-    actores = []
 
     try:
         cursor = conexion.cursor()
@@ -383,10 +339,7 @@ def dbGetMoviesByGenre(genero):
         cursor.execute(consulta, [genero_aux])
         for tupla in cursor:
             print(tupla)
-            director = dbGetDirectorById(tupla[4])
-            actores = dbGetActorsInMovie(tupla[0])
-            pelicula = Pelicula(tupla[0], tupla[1], tupla[2], tupla[3], director, actores, tupla[5])
-            peliculas.append(pelicula.to_dict())
+            peliculas.append(tupla)
         print("Total películas del genero ", genero, ": " , cursor.rowcount)
         cursor.close()
         return peliculas
@@ -396,9 +349,6 @@ def dbGetMoviesByGenre(genero):
 
 def dbGetSeriesByGenre(genero):
     print("---dbGetSeriesByGenre---")
-    actores = []
-    temporadas = []
-    capitulos = []
     series = []
     
     try:
@@ -408,11 +358,7 @@ def dbGetSeriesByGenre(genero):
         cursor.execute(consulta, [genero_aux])
         for tupla in cursor:
             print(tupla)
-            actores = dbGetActorsInSerie(tupla[0])
-            temporadas = dbGetSeasonsOfSerie(tupla[0])
-            capitulos = dbGetEpisodesOfSerie(tupla[0])
-            serie = Serie(tupla[0], tupla[1], tupla[2], tupla[3], actores, temporadas, capitulos)
-            series.append(serie.to_dict())
+            series.append(tupla)
             
         print("Total series del genero", genero, ": ", cursor.rowcount)
         cursor.close()
@@ -427,12 +373,11 @@ def dbGetActorsInMovie(movie_id):
     
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT a.actor_id, a.actor_name, a.actor_birthdate FROM asee_actors a JOIN asee_actor_movie am ON a.actor_id = am.actor WHERE am.movie = :movie_id"
+        consulta = "SELECT actor FROM asee_actor_movie WHERE movie = :movie_id"
         cursor.execute(consulta, [movie_id])
         for tupla in cursor:
             print(tupla)
-            actor = Actor(tupla[0], tupla[1], tupla[2])
-            actores.append(actor.to_dict())
+            actores.append(tupla)
 
         print("Total actores:", cursor.rowcount)
         cursor.close()
@@ -447,12 +392,11 @@ def dbGetActorsInSerie(serie_id):
     
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT a.actor_id, a.actor_name, a.actor_birthdate FROM asee_actors a JOIN asee_actor_serie as ON a.actor_id = as.actor WHERE as.movie = :movie_id"
+        consulta = "SELECT actor FROM asee_actor_serie WHERE serie = :serie_id"
         cursor.execute(consulta, [serie_id])
         for tupla in cursor:
             print(tupla)
-            actor = Actor(tupla[0], tupla[1], tupla[2])
-            actores.append(actor.to_dict())
+            actores.append(tupla)
 
         print("Total actores:", cursor.rowcount)
         cursor.close()
@@ -463,18 +407,15 @@ def dbGetActorsInSerie(serie_id):
 
 def dbGetMovieDirector(movie_id):
     print("---dbGetMovieDirector---")
-    directores = []
 
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT ad.director_id, ad.director_name, ad.director_birthdate FROM asee_directors ad JOIN asee_movies am ON ad.director_id = am.director WHERE am.movie_id = :movie_id"
+        consulta = "SELECT director FROM asee_movies WHERE movie_id = :movie_id"
         cursor.execute(consulta, [movie_id])
-        for tupla in cursor:
-            print(tupla)
-            director = Director(tupla[0], tupla[1], tupla[2])
-            directores.append(director.to_dict())
+        tupla = cursor.fetchone()
+        print(tupla)
         cursor.close()
-        return directores
+        return tupla
     except db.DatabaseError as error:
         print("Error: No se puede obtener el director de la película")
         print(error)
@@ -621,11 +562,9 @@ def dbGetMovieViews(movie_id):
         consulta = "SELECT SUM(views) FROM asee_user_movie WHERE movie = :movie_id"
         cursor.execute(consulta, [movie_id])
         tupla = cursor.fetchone()
-        total_views = tupla[0]
-        view = VisualizacionesPeliculas(movie_id, movie_id, total_views)
-        print("Visualizaciones de la pelicula ", movie_id, " = ", total_views)
+        print("Visualizaciones de la pelicula ", movie_id, " = ", tupla[0])
         cursor.close()
-        return view.to_dict()
+        return tupla[0]
     except db.DatabaseError as error:
         print("Error. No se han podido obtener las visualizaciones de la pelicula ", movie_id)
         print(error)
@@ -638,50 +577,47 @@ def dbGetSerieViews(serie_id):
         consulta = "SELECT SUM(views) FROM asee_user_serie WHERE serie = :serie_id"
         cursor.execute(consulta, [serie_id])
         tupla = cursor.fetchone()
-        total_views = tupla[0]
-        view = VisualizacionesSeries(serie_id, serie_id, total_views)
-        print("Visualizaciones de la serie ", serie_id, " = ", total_views)
+        print("Visualizaciones de la serie ", serie_id, " = ", tupla[0])
         cursor.close()
-        return view.to_dict()
+        return tupla[0]
     except db.DatabaseError as error:
         print("Error. No se han podido obtener las visualizaciones de la serie ", serie_id)
         print(error)
         
-def dbUpdateMovieViews(id, movie_id, nview):
+def dbUpdateMovieViews(user_id, movie_id):
     print("---dbUpdateMovieViews---")
 
     try:
         cursor = conexion.cursor()
-        consul = "SELECT user_email FROM asee_user_movie WHERE user_email = (SELECT email FROM asee_users WHERE user_id = :id)"
-        cursor.execute(consul, [id])
+        consulta = "SELECT * FROM asee_user_movie WHERE user_id = :user_id AND movie = :movie_id"
+        cursor.execute(consulta, [user_id, movie_id])
         tupla = cursor.fetchone()
-        email = tupla[0]
         if tupla is not None:
             #actualizar
-            consulta = "UPDATE asee_user_movie SET views = views + :nview WHERE movie = :movie_id AND user_email = :email"
-            cursor.execute(consulta, [nview, movie_id, email])
-            tupla2 = cursor.fetchone()
+            consulta = "UPDATE asee_user_movie SET views = views + 1 WHERE user_id = :user_id AND movie = :movie_id"
+            cursor.execute(consulta, [movie_id, user_id])
+            cursor.fetchone()
             if(cursor.rowcount == 1):
-                print("Visualizaciones del usuario ", email, " y de la pelicula ", movie_id, " actualizadas")
+                print("Visualizaciones del usuario ", user_id, " y de la pelicula ", movie_id, " actualizadas")
                 respuesta = True
             else:
-                print("No se han podido actualizar las visualizaciones para ", email, " y pelicula ", movie_id)
+                print("No se han podido actualizar las visualizaciones para ", user_id, " y pelicula ", movie_id)
                 respuesta = False
         else:
             #insertar
-            consulta3 = "INSERT INTO asee_user_movie VALUES (:email, :movie_id, :nview)"
-            cursor.execute(consulta3, [email, movie_id, nview])
+            consulta = "INSERT INTO asee_user_movie VALUES (:user_id, :movie_id, 1)"
+            cursor.execute(consulta, [user_id, movie_id])
             if cursor.rowcount == 1:
-                print("Se ha insertado visualizacion. Usuario: ", email, " Pelicula: ", movie_id)
+                print("Se ha insertado visualizacion. Usuario: ", user_id, " Pelicula: ", movie_id)
                 respuesta = True
             else:
-                print("No se ha podido insertar la visulizacion. Usuario: ", email, "Pelicula: ", movie_id)
+                print("No se ha podido insertar la visulizacion. Usuario: ", user_id, "Pelicula: ", movie_id)
                 respuesta = False
 
         cursor.close()
         return respuesta
     except db.DatabaseError as error:
-        print("Error. No se han podido actualizar las visualizaciones de la pelicula ", movie_id, " usuario: ", id)
+        print("Error. No se han podido actualizar las visualizaciones de la pelicula ", movie_id, " usuario: ", user_id)
         print(error)
         return False
 
@@ -690,13 +626,13 @@ def dbUpdateSerieViews(user_id, serie_id):
 
     try:
         cursor = conexion.cursor()
-        consul = "SELECT * FROM asee_user_serie WHERE user_id = :user_id AND serie = :serie_id"
-        cursor.execute(consul, [user_id, serie_id])
+        consulta = "SELECT * FROM asee_user_serie WHERE user_id = :user_id AND serie = :serie_id"
+        cursor.execute(consulta, [user_id, serie_id])
         tupla = cursor.fetchone()
         if tupla is not None:
             #actualizar
-            consul = "UPDATE asee_user_serie SET views = views + 1 WHERE user_id = :user_id AND serie = :serie_id"
-            cursor.execute(consul, [user_id, serie_id])
+            consulta = "UPDATE asee_user_serie SET views = views + 1 WHERE user_id = :user_id AND serie = :serie_id"
+            cursor.execute(consulta, [user_id, serie_id])
             cursor.fetchone()
             if(cursor.rowcount == 1):
                 print("Visualizaciones del usuario ", user_id, " y de la serie ", serie_id, " actualizadas")
@@ -706,8 +642,8 @@ def dbUpdateSerieViews(user_id, serie_id):
                 respuesta = False
         else:
             #insertar
-            consul = "INSERT INTO asee_user_movie VALUES (:email, :serie_id, 1)"
-            cursor.execute(consul, [user_id, serie_id])
+            consulta = "INSERT INTO asee_user_movie VALUES (:user_id, :serie_id, 1)"
+            cursor.execute(consulta, [user_id, serie_id])
             cursor.fetchone()
             if cursor.rowcount == 1:
                 print("Se ha insertado visualizacion. Usuario: ", user_id, " Serie: ", serie_id)
@@ -719,7 +655,7 @@ def dbUpdateSerieViews(user_id, serie_id):
         cursor.close()
         return respuesta
     except db.DatabaseError as error:
-        print("Error. No se han podido actualizar las visualizaciones de la serie ", serie_id, " usuario: ", id)
+        print("Error. No se han podido actualizar las visualizaciones de la serie ", serie_id, " usuario: ", user_id)
         print(error)
         return False
 
@@ -733,10 +669,9 @@ def dbMovieRecomendations(user_id):
         cursor.execute(consulta)
         for tupla in cursor:
             print(tupla)
-            recoms.append(tupla[0])    
-        movie_recom = RecomendacionesPeliculas(user_id, user_id, recoms)
+            recoms.append(tupla)
         cursor.close()
-        return movie_recom.to_dict()
+        return recoms
     except db.DatabaseError as error:
         print("Error. No se han podido obtener las recomendaciones de peliculas")
         print(error)
@@ -751,10 +686,9 @@ def dbSerieRecomendations(user_id):
         cursor.execute(consulta)
         for tupla in cursor:
             print(tupla)
-            recoms.append(tupla[0])    
-        serie_recom = RecomendacionesSeries(user_id, user_id, recoms)
+            recoms.append(tupla)
         cursor.close()
-        return serie_recom.to_dict()
+        return recoms
     except db.DatabaseError as error:
         print("Error. No se han podido obtener las recomendaciones de series")
         print(error)
@@ -762,12 +696,11 @@ def dbSerieRecomendations(user_id):
 def dbGetMovieHistory(user_id):
     try:
         cursor = conexion.cursor()
-        consul = "SELECT movie FROM asee_user_movie WHERE user_id = :user_id"
-        cursor.execute(consul, [user_id,])
+        consulta = "SELECT movie FROM asee_user_movie WHERE user_id = :user_id"
+        cursor.execute(consulta, [user_id,])
         peliculas = []
         for tupla in cursor:
-            pelicula = dbGetMovieById(tupla[0])
-            peliculas.append(pelicula)
+            peliculas.append(tupla)
         return peliculas
     except db.DatabaseError as error:
         print("Error. No se han podido actualizar las visualizaciones de usuario")

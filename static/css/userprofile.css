@@ -36,7 +36,7 @@ body {
 }
 
 .edit-profile-btn {
-    position: absolute;
+    position: center;
     right: 20px;
     top: 20px;
     background-color: white;
@@ -47,6 +47,21 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+
+.close_session {
+    position: absolute; /* Usa `absolute` para posicionar con precisión */
+    right: 20px; /* Ajusta el margen derecho */
+    top: 20px; /* Ajusta el margen superior */
+    background-color: #e50914; /* Color de fondo similar al de Netflix */
+    color: white; /* Texto blanco */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
 
 .edit-profile-btn:hover {
     background-color: #e5e5e5;

@@ -10,7 +10,7 @@
     <!-- Barra de navegación -->
     <nav class="navbar">
         <div class="nav-left">
-            <img src="netflix-logo.png" alt="Netflix" class="logo">
+            <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Netflix" class="logo">
             <ul class="nav-links">
                 <li class="active"><a href="{{ url_for('home') }}">Inicio</a></li>
                 <li><a href="{{ url_for('series') }}">Series</a></li>
@@ -28,7 +28,7 @@
            
             <div class="profile-menu">
                 <a href="{{ url_for('perfil') }}" class="boton">Perfil</a>
-                <img src="profile-avatar.png" alt="Perfil" class="profile-icon">
+                <img src="{{ url_for('static', filename='imagenes/profile-avatar.png') }}" alt="Perfil" class="profile-icon">
             </div>
         </div>
     </nav>
@@ -45,7 +45,7 @@
                         <div class="result-card">
                             <img src="movie1.png" alt="Título 1">
                             <div class="result-info">
-                                <a href="{{url_for('search_content')}}">{{pelicula.titulo}}</a>
+                                <a href="{{url_for('search_content_movie', id=pelicula.id)}}">{{pelicula.titulo}}</a>
                                 <div class="meta-info">
                                     <span class="duration">Duración: {{pelicula.duracion}}</span>
                                     <span class="match">98% coincidencia</span>

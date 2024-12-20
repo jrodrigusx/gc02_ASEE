@@ -4,12 +4,14 @@ from flask import redirect, url_for
 from flask import request, session,jsonify
 import requests
 
-from api.API_Contenidos.swagger_server import contenidos_blueprint
-from api.API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
-from api.API_Usuario.swagger_server.controllers import usuarios_controller
-from api.API_Visualizaciones.swagger_server import visualizaciones_blueprint
+from API_Contenidos.swagger_server import contenidos_blueprint
+from API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
+from API_Usuario.swagger_server.controllers import usuarios_controller
+from API_Visualizaciones.swagger_server import visualizaciones_blueprint
 
-import dbconnection  # Importar función para validar en la base de datos
+from API_Contenidos import dbconnection_contenidos
+from API_Usuario import dbconnection_usuarios
+from API_Visualizaciones import dbconnection_visualizaciones
 
 app = Flask(__name__)
 app.secret_key = 'SECRETA'
@@ -30,10 +32,10 @@ def login():
     password = request.form.get('password')
 
     # Validar las credenciales usando la base de datos
-    id_usuario = dbconnection.dbLogIn(email, password)  # Función personalizada que valida en la BD
+    id_usuario = dbconnection_usuarios.dbLogIn(email, password)  # Función personalizada que valida en la BD
     if id_usuario is None :
         return render_template('login.html', error_message="Usuario no Existente")
-    usuario =  usuarios_controller.usuarios_id_get(id_usuario)
+    usuario = usuarios_controller.usuarios_id_get(id_usuario)
     if usuario is None :
         return render_template('login.html', error_message="Usuario no Existente")
     
@@ -116,22 +118,35 @@ def peliculas():
 
 @app.route('/mi_lista/')
 def mi_lista():
-    peliculas = dbconnection.dbGetMovieHistory(1)
+    peliculas = dbconnection_visualizaciones.dbGetMovieHistory(1)
     return render_template('miLista.html', peliculas=peliculas)  # Página de "Mi lista"
 
 @app.route('/search/')
 def search():
     return render_template('search.html')  # Página de "Busqueda"
 
-@app.route('/search/contenido/', methods=['GET', 'POST'])
-def search_content():
-    data = request.form
-    nombrepelicula = data.get('query', type=str)
+@app.route('/contenido/pelicula/<movie_id>', methods=['GET', 'POST'])
+def search_content_movie(movie_id):
+    print('ID DE LA PELICULA QUE SE VA A MOSTRAR: ', movie_id)
     if request.method=='GET':
-        contenidos = peliculas_controller.peliculas_titulo_titulo_get("")
+        info = peliculas_controller.peliculas_id_get(movie_id)
     if request.method=='POST':
-        contenidos = peliculas_controller.peliculas_titulo_titulo_get(nombrepelicula)
-    return render_template('content-detail.html', contenidos=contenidos)  # Página de "Busqueda"
+        info = None
+
+    return render_template('content-detail.html', contenidos=info)  # Página de "Busqueda"
+
+@app.route('/contenido/serie/<serie_id>', methods=['GET', 'POST'])
+def search_content_serie(serie_id):
+    print('ID DE LA SERIE QUE SE VA A MOSTRAR: ', serie_id)
+    info = series_controller.series_id_get(serie_id)
+    if request.method=='GET':
+        season = 2
+    if request.method=='POST':
+        season = request.form.get('temporada')
+    
+    print('TEMPORADA DE LA SERIE: ', int(season))
+    
+    return render_template('content-detail.html', contenidos=info, season=season - 1)  # Página de "Busqueda"
 
 @app.route('/search_result/', methods=['GET', 'POST'])
 def search_result():
@@ -144,10 +159,11 @@ def search_result():
         resultados = f"Resultados para: {termino_busqueda}"
         
         #Pueba ejemplo lista(cambiar por BD)
-        resultados = peliculas_controller.peliculas_titulo_titulo_get(termino_busqueda)
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get(termino_busqueda)
+        series = series_controller.series_titulo_titulo_get(termino_busqueda)
         
         # Renderiza una página con los resultados
-        return render_template('search.html', peliculas=resultados)
+        return render_template('search.html', peliculas=peliculas, series=series)
         #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
     
     # Si es GET, muestra la página inicial de búsqueda
@@ -300,4 +316,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)

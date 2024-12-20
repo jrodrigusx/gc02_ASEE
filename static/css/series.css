@@ -14,24 +14,25 @@ body {
 .navbar {
     position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 4%;
-    background-color: #141414;
+    padding: 15px 60px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0));
     z-index: 1000;
 }
 
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
 }
 
 .logo {
-    height: 25px;
+    width: 100px; /* Ajusta el tamaño según lo que necesites */
+    height: auto; /* Mantiene la proporción de la imagen */
+    background-color: transparent;
 }
 
 .nav-links {
@@ -43,7 +44,11 @@ body {
 .nav-links a {
     color: #e5e5e5;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 20px;
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center
 }
 
 .nav-links .active a {
@@ -56,15 +61,42 @@ body {
     align-items: center;
     gap: 20px;
 }
+/* Búsqueda */
+.search {
+    position: relative;
+}
 
+.search input {
+    background-color: rgba(0,0,0,0.75);
+    border: 1px solid white;
+    color: white;
+    padding: 8px 40px 8px 10px;
+    border-radius: 4px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.boton {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Color de fondo */
+    color: white; /* Color del texto */
+    text-decoration: none;
+    border-radius: 5px;
+}
 /* Estilos del contenedor principal */
 .series-container {
     padding-top: 100px;
 }
 
 /* Estilos de las filas de contenido */
-.row {
-    margin: 20px 4%;
+
+.row_filter {
+    margin: 20px 8%;
     margin-bottom: 40px;
 }
 
@@ -75,53 +107,40 @@ body {
 }
 
 /* Estilos de las miniaturas */
-.thumbnails {
+
+.row h2 {
+    margin-bottom: 20px;
+}
+.carousel {
     display: flex;
+    gap: 10px;
     overflow-x: auto;
-    gap: 8px;
-    padding: 10px 0;
-    scrollbar-width: none; /* Para Firefox */
+    padding: 20px 0;
 }
 
-.thumbnails::-webkit-scrollbar {
+.carousel::-webkit-scrollbar {
     display: none; /* Para Chrome, Safari y Opera */
 }
 
-.thumbnail {
+
+.movie-card {
     flex: 0 0 auto;
-    width: 16.66%;
-    transition: transform 0.3s ease;
+    width: 250px;
+    height: 140px;
     position: relative;
+    transition: transform 0.3s;
 }
 
-.thumbnail:hover {
-    transform: scale(1.05);
-    cursor: pointer;
+.movie-card:hover {
+    transform: scale(1.1);
     z-index: 2;
 }
 
-.thumbnail img {
+.movie-card img {
     width: 100%;
-    border-radius: 4px;
+    height: 100%;
     object-fit: cover;
-}
-
-/* Efecto de hover en las miniaturas */
-.thumbnail::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: opacity 0.3s;
     border-radius: 4px;
-}
-
-.thumbnail:hover::after {
-    opacity: 1;
 }
 /* Búsqueda */
 .search {
@@ -154,3 +173,24 @@ body {
     }
 }
  
+
+/* Filtros */
+.search-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1.5rem;
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: #fff;
+    color: #000;
+}

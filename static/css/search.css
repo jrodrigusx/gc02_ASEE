@@ -15,42 +15,80 @@ body {
 .navbar {
     position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 4%;
-    background-color: #141414;
+    padding: 15px 60px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0));
     z-index: 1000;
 }
 
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 20px;
 }
 
 .logo {
-    height: 25px;
+    width: 100px; /* Ajusta el tamaño según lo que necesites */
+    height: auto; /* Mantiene la proporción de la imagen */
+    background-color: transparent;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
+    gap: 20px;
 }
 
 .nav-links a {
     color: #e5e5e5;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 20px;
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center
+}
+
+.nav-links .active a {
+    color: white;
+    font-weight: bold;
 }
 
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 20px;
+}
+/* Búsqueda */
+.search {
+    position: relative;
+}
+
+.search input {
+    background-color: rgba(0,0,0,0.75);
+    border: 1px solid white;
+    color: white;
+    padding: 8px 40px 8px 10px;
+    border-radius: 4px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.boton {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Color de fondo */
+    color: white; /* Color del texto */
+    text-decoration: none;
+    border-radius: 5px;
 }
 
 /* Barra de búsqueda */

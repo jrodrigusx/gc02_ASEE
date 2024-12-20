@@ -1,0 +1,6 @@
+connexion==3.1.0
+Flask==2.2.5
+Flask_Testing==0.8.1
+python_dateutil==2.6.0
+setuptools==75.2.0
+six==1.16.0
