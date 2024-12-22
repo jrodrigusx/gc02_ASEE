@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{contenidos.titulo}} - Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-detail.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Netflix" class="logo">
+            <ul class="nav-links">
+                <li class="active"><a href="{{ url_for('home') }}">Inicio</a></li>
+                <li><a href="{{ url_for('series') }}">Series</a></li>
+                <li><a href="{{ url_for('peliculas') }}">Películas</a></li>
+                <li><a href="{{ url_for('mi_lista') }}">Mi lista</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <form action="{{ url_for('search_result') }}" method="POST">
+                <div class="search">
+                    <input type="text" name="query" placeholder="Títulos, personas, géneros">
+                    <i class="search-icon">🔍</i>
+                </div>
+            </form>
+           
+            <div class="profile-menu">
+                <a href="{{ url_for('perfil') }}" class="boton">Perfil</a>
+                <img src="{{ url_for('static', filename='imagenes/profile-avatar.png') }}" alt="Perfil" class="profile-icon">
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>{{ contenidos.titulo }}</h1>
+            <div class="meta-info">
+                <span class="year">2024</span>
+                <span class="rating">16+</span>
+                {% if contenidos.temporadas %}
+                    <span class="seasons">4 Temporadas</span>
+                {% endif %}
+                {% if contenidos.duracion %}
+                    <span class="seasons">Duración: {{contenidos.duracion}}</span>
+                {% endif %}
+                <span class="quality">HD</span>
+            </div>
+            <div class="match">98% de coincidencia</div>
+            <p class="synopsis">
+                {{contenidos.descripcion}}
+            </p>
+            <div class="buttons">
+                <button class="play-btn">▶ Reproducir</button>
+                <button class="trailer-btn">Tráiler</button>
+                <button class="my-list-btn">+ Mi Lista</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="content">
+        {% if contenidos.temporadas %}
+        <section class="episodes">
+            <h2>Episodios</h2>
+            <div class="season-selector">
+                <label for="temporada-select">Selecciona una temporada:</label>
+                <select id="temporada-select" name="temporada">
+                    <form action="{{url_for('search_content_serie', serie_id=contenidos.id)}}" method="POST" name="temporada" onchange="this.form.submit()" autofocus>
+                        {% for temporada in contenidos.temporadas %}
+                            <option value="{{ temporada.numero }}">Temporada {{ temporada.numero }}</option>
+                        {% endfor %}
+                    </form>
+                </select>
+            </div>
+            
+            <div class="episodes-list">
+                {% for capitulo in contenidos.temporadas[season].capitulos %}
+                    <div class="episode-card">
+                        <!-- <img src="episode1.jpg" alt="Episodio 1"> -->
+                        <div class="episode-info">
+                            <div class="episode-header">
+                                <h3>{{capitulo.num_capitulo}} - {{capitulo.titulo}}</h3>
+                                <span class="duration">{{capitulo.duracion}} min</span>
+                            </div>
+                            <p>{{capitulo.descripcion}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!-- Más episodios... -->
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="details">
+            <div class="detail-columns">
+                <div class="left-column">
+                    <div class="cast">
+                        <span class="label">Elenco:</span>
+                        <span>
+                            | 
+                            {% for actor in contenidos.actores %}
+                                {{actor.nombre}} | 
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <div class="genres">
+                        <span class="label">Géneros:</span>
+                        <span>{{contenidos.genero}}</span>
+                    </div>
+                    <div class="tags">
+                        <span class="label">Este título es:</span>
+                        <span>Inquietante, Oscuro, Emocionante</span>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="rating-details">
+                        <span class="label">Clasificación por edad:</span>
+                        <span>16+ Violencia, Lenguaje, Terror</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="similar">
+            <h2>Títulos similares</h2>
+            <div class="similar-grid">
+                <!-- Tarjetas de contenido similar -->
+            </div>
+        </section>
+    </main>
+</body>
+</html> 
