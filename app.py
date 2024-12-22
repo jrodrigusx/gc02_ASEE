@@ -4,6 +4,7 @@ from flask import redirect, url_for
 from flask import request, session,jsonify
 import requests
 
+
 from API_Contenidos.swagger_server import contenidos_blueprint
 from API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
 from API_Usuario.swagger_server.controllers import usuarios_controller
@@ -168,23 +169,7 @@ def search_result():
     
     # Si es GET, muestra la página inicial de búsqueda
     return render_template('search.html')
-    if request.method == 'POST':
-        # Obtén el término de búsqueda desde el formulario
-        termino_busqueda = request.form.get('query', '').strip()
-
-        # Aquí podrías realizar una búsqueda en la base de datos o lógica personalizada
-        # Por ahora, simplemente muestra el término buscado
-        resultados = f"Resultados para: {termino_busqueda}"
-        
-        #Pueba ejemplo lista(cambiar por BD)
-        resultados = ["Ejemplo 1", "Ejemplo 2"] if termino_busqueda == "prueba" else []
-        
-        # Renderiza una página con los resultados
-        return render_template('search.html', resultados=resultados)
-        #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
     
-    # Si es GET, muestra la página inicial de búsqueda
-    return render_template('search.html')
 
 @app.route('/perfil/')
 def perfil():
@@ -208,7 +193,6 @@ def edit_perfil():
         nombre = session['nombre']
         apellidos = session['apellidos']
         email = session['email']
-        password = session['password']
         genero_favorito = session['genero_favorito']
         
         return render_template('edit-profile.html', id_usuario=id_usuario,

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userprofile.css') }}">
+</head>
+<body>
+    <div class="profile-container">
+        <a href="{{ url_for('home') }}" class="boton">Inicio</a>
+        <a href="{{ url_for('index') }}" class="close_session">Cerrar Sesión</a>
+        <a href="{{ url_for('edit_perfil') }}" class="edit-profile-btn">Editar Perfil</a>
+        
+        <div class="profile-header">
+            <img src="{{ url_for('static', filename='imagenes/user.png') }}" alt="Avatar" class="profile-avatar">
+            <div class="profile-info">
+               <h1>{{ user_data.nombre }}</h1><h1>{{ user_data.apellidos }} </h1>
+                
+                <p class="profile-email">{{ user_data.email }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <div class="profile-section">
+                <h2>Idiomas</h2>
+                <div class="preferences">
+                    <div class="preference-item">
+                        <span>Idioma de la interfaz</span>
+                        <span>Español</span>
+                    </div>
+                    <div class="preference-item">
+                        <span>Idioma de audio preferido</span>
+                        <span>Español (Original)</span>
+                    </div>
+                    <div class="preference-item">
+                        <span>Idioma de subtítulos</span>
+                        <span>Español</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2>Géneros Favoritos</h2>
+                <div class="preferences">
+                    <div class="favorites">
+                        <div class="genre-tag">{{ user_data.genero_favorito }}</div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html> 

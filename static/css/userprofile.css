@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+    background-color: #141414;
+    color: white;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #333;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    background-color: #E50914;
+    border-radius: 4px;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.profile-email {
+    color: #808080;
+}
+
+.edit-profile-btn {
+    position: center;
+    right: 20px;
+    top: 20px;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.close_session {
+    position: absolute; /* Usa `absolute` para posicionar con precisión */
+    right: 20px; /* Ajusta el margen derecho */
+    top: 20px; /* Ajusta el margen superior */
+    background-color: #e50914; /* Color de fondo similar al de Netflix */
+    color: white; /* Texto blanco */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+
+.edit-profile-btn:hover {
+    background-color: #e5e5e5;
+}
+
+.favorites {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.genre-tag {
+    background-color: #333;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.boton {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Color de fondo */
+    color: white; /* Color del texto */
+    text-decoration: none;
+    border-radius: 5px;
+}

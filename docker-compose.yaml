@@ -6,10 +6,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+    environment:
+      - DB_HOST=oracledb
+      - DB_PORT=1521
+      - DB_USER=system
+      - DB_PASSWORD=oraclepassword
     depends_on:
       - api_usuario
       - api_contenidos
       - api_visualizaciones
+      - oracledb
     networks:
       - app-network
 
@@ -45,6 +51,25 @@ services:
       - FLASK_APP=swagger_server.__main__.py
     networks:
       - app-network
+  
+  oracledb:
+    image: oraclelinux:7-slim
+    container_name: datebase
+    ports: 
+      - "1522:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_HOME=/opt/oracle/product/21c/dbhome_1 
+      - ORACLE_SID=ORCLCDB
+      - ORACLE_PDB=ORCLPDB1
+      - ORACLE_PASSWORD=oraclepassword
+    volumes:
+      - oracle-data:/u01/app/oracle # Volumen persistente para los datos de Oracle
+      - data-pump-dir:/u01/app/oracle/product/19c/dbhome_1/data_pump_dir # Volumen persistente para Data Pump
+    networks:
+      - app-network
+    command: >
+      bash -c "/u01/app/oracle/product/19c/dbhome_1/bin/lsnrctl start && tail -f /dev/null"
 
   
 
@@ -62,7 +87,13 @@ services:
 
 networks:
   app-network:
+    driver: bridge
    
+volumes:
+  oracle-data:
+    driver: local
+  data-pump-dir:  # Volumen para el directorio de Data Pump
+    driver: local
 
 
   
